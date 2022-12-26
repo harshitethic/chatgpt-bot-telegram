@@ -10,7 +10,7 @@ const getImage = async (text) => {
   try {
     const response = await openai.createImage({
       prompt: text,
-      n: 5,
+      n: 1,
       size: "512x512",
     });
 console.log(response.data.data)
