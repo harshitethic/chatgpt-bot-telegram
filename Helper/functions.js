@@ -13,7 +13,7 @@ const getImage = async (text) => {
       n: 1,
       size: "512x512",
     });
-console.log(response.data.data)
+
     return response.data.data[0].url;
   } catch (error) {
     console.log(error);

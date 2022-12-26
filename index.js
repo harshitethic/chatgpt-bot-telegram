@@ -18,12 +18,14 @@ bot.help((ctx) => {
   );
 });
 
+
+
 // Image command
 bot.command("image", async (ctx) => {
   const text = ctx.message.text?.replace("/image", "")?.trim().toLowerCase();
 
   if (text) {
-    console.log(`Text is ${text}`);
+   
     const res = await getImage(text);
 
     if (res) {
@@ -66,7 +68,7 @@ bot.command("ask", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       }
     );
-    console.log(ctx.message.message_id);
+  
     //  reply("Please ask anything after /ask");
   }
 });
