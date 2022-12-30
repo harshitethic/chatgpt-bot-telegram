@@ -1,4 +1,4 @@
-require("dotenv").config();
+// require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
