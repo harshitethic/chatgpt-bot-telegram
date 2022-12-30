@@ -2,8 +2,8 @@
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
-const express = require("express");
-const app = express();
+// const express = require("express");
+// const app = express();
 
 const configuration = new Configuration({
   apiKey: process.env.API,
@@ -92,6 +92,13 @@ bot.command("ask", async (ctx) => {
 
 bot.launch();
 
-app.listen(5000, () => {
-  console.log("Server running");
-});
+// AWS event handler syntax (https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html)
+exports.handler = async event => {
+  try {
+    await bot.handleUpdate(JSON.parse(event.body))
+    return { statusCode: 200, body: "" }
+  } catch (e) {
+    console.error("error in handler:", e)
+    return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
+  }
+}
