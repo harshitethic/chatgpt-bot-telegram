@@ -59,7 +59,7 @@ bot.command("ask", async (ctx) => {
     ctx.sendChatAction("typing");
     const res = await getChat(text);
     if (res) {
-      ctx.telegram.sendMessage(ctx.message.chat.id, res.charAt(index), {
+      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
         reply_to_message_id: ctx.message.message_id,
       });
     }
