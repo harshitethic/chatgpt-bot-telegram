@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
 const { getImage, getChat } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
@@ -92,13 +92,3 @@ bot.command("ask", async (ctx) => {
 
 bot.launch();
 
-// AWS event handler syntax (https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html)
-exports.handler = async event => {
-  try {
-    await bot.handleUpdate(JSON.parse(event.body))
-    return { statusCode: 200, body: "" }
-  } catch (e) {
-    console.error("error in handler:", e)
-    return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
-  }
-}
