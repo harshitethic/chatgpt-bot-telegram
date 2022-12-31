@@ -13,7 +13,7 @@ module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
 bot.start((ctx) => {
-  ctx.reply("Welcome , You can ask anything from me\n This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me");
+  ctx.reply("Welcome , You can ask anything from me\n\nThis bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me");
   console.log("Bot started");
 });
 
