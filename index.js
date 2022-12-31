@@ -25,30 +25,7 @@ bot.help((ctx) => {
 
 
 
-bot.on('text',async (ctx)=>{
-  const text = ctx.message.text
-  // console.log();
 
-  if (text) {
-    ctx.sendChatAction("typing");
-    const res = await getChat(text);
-    if (res) {
-      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
-        reply_to_message_id: ctx.message.message_id,
-      });
-    }
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "Please ask anything",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
-
-    
-  }
-})
 
 // Image command
 bot.command("image", async (ctx) => {
