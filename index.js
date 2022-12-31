@@ -20,7 +20,7 @@ module.exports = openai;
 const bot = new Telegraf(process.env.TG_API);
 bot.start((ctx) => {
   ctx.reply(
-    "Welcome , You can ask anything from me\n\nThis bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me"
+    "Welcome , You can ask anything from me\n\nThis bot can perform the following command \n /image -> to create image from text \n /ask -> ask anything from me \n /en -> to correct your grammer "
   );
   console.log("Bot started");
 });
@@ -70,6 +70,7 @@ bot.command("image", async (ctx) => {
 bot.command("ask", async (ctx) => {
   const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
   console.log(text);
+  console.log(ctx.from)
 
   if (text) {
     ctx.sendChatAction("typing");
