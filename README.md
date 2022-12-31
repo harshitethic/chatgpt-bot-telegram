@@ -1,6 +1,6 @@
 # Telegram-Ai-Bot
 
-## TELEGRAM BOT -> @botOpenAI_Bot
+### TELEGRAM BOT -> @botOpenAI_Bot
 
 ### Commands 
 
