@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
-const { getImage, getChat } = require("./Helper/functions");
+const { getImage, getChat, getPythonExplanaton, correctEngish } = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
 // const express = require("express");
 // const app = express();
@@ -22,6 +22,33 @@ bot.help((ctx) => {
     "This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me "
   );
 });
+
+
+
+bot.on('text',async (ctx)=>{
+  const text = ctx.message.text
+  // console.log();
+
+  if (text) {
+    ctx.sendChatAction("typing");
+    const res = await getChat(text);
+    if (res) {
+      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
+        reply_to_message_id: ctx.message.message_id,
+      });
+    }
+  } else {
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      "Please ask anything",
+      {
+        reply_to_message_id: ctx.message.message_id,
+      }
+    );
+
+    
+  }
+})
 
 // Image command
 bot.command("image", async (ctx) => {
@@ -72,23 +99,39 @@ bot.command("ask", async (ctx) => {
       }
     );
 
-    //  reply("Please ask anything after /ask");
+    
+  }
+});
+bot.command("en", async (ctx) => {
+  const text = ctx.message.text?.replace("/en", "")?.trim().toLowerCase();
+  console.log(text);
+
+  if (text) {
+    ctx.sendChatAction("typing");
+    const res = await correctEngish(text);
+    if (res) {
+      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
+        reply_to_message_id: ctx.message.message_id,
+      });
+    }
+  } else {
+    ctx.telegram.sendMessage(
+      ctx.message.chat.id,
+      "Please ask anything after /en",
+      {
+        reply_to_message_id: ctx.message.message_id,
+      }
+    );
+
+    
   }
 });
 
-// bot.on("photo", (ctx) => {
-//   console.log(ctx.message.photo);
-// });
 
-// bot.on("text", (ctx) => {
-//   ctx.telegram.sendMessage(
-//     ctx.message.chat.id,
-//     "Please /ask command to ask anything and use /image command to generate a image",
-//     {
-//       reply_to_message_id: ctx.message.message_id,
-//     }
-//   );
-// });
+
+
+
+
 
 bot.launch();
 
