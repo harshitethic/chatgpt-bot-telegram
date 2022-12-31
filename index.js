@@ -49,6 +49,10 @@ bot.command("image", async (ctx) => {
       ctx.telegram.sendPhoto(ctx.message.chat.id, res, {
         reply_to_message_id: ctx.message.message_id,
       });
+    }else{
+      ctx.telegram.sendMessage(ctx.message.chat.id, "I can't generate image for this text", {
+        reply_to_message_id: ctx.message.message_id,
+      });
     }
   } else {
     ctx.telegram.sendMessage(
