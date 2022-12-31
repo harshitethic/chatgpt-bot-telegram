@@ -1,7 +1,13 @@
 require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
-const { getImage, getChat, getPythonExplanaton, correctEngish } = require("./Helper/functions");
+const {
+  getImage,
+  getChat,
+  getPythonExplanaton,
+  correctEngish,
+} = require("./Helper/functions");
 const { Telegraf } = require("telegraf");
+const { default: axios } = require("axios");
 // const express = require("express");
 // const app = express();
 
@@ -13,7 +19,9 @@ module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
 bot.start((ctx) => {
-  ctx.reply("Welcome , You can ask anything from me\n\nThis bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me");
+  ctx.reply(
+    "Welcome , You can ask anything from me\n\nThis bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me"
+  );
   console.log("Bot started");
 });
 
@@ -23,9 +31,9 @@ bot.help((ctx) => {
   );
 });
 
-
-
-
+// bot.on('text',async(ctx)=>{
+//   console.log(ctx)
+// })
 
 // Image command
 bot.command("image", async (ctx) => {
@@ -75,8 +83,6 @@ bot.command("ask", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       }
     );
-
-    
   }
 });
 bot.command("en", async (ctx) => {
@@ -99,16 +105,22 @@ bot.command("en", async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
       }
     );
+  }
+});
+bot.command("yo", async (ctx) => {
+  const text = ctx.message.text?.replace("/yo", "")?.trim().toLowerCase();
+  console.log(text);
 
-    
+  const ress = await axios.get("https://api.yomomma.info/");
+  console.log(ress.data?.joke);
+
+  ctx.sendChatAction("typing");
+
+  if (ress.data?.joke) {
+    ctx.telegram.sendMessage(ctx.message.chat.id, ress.data?.joke, {
+      reply_to_message_id: ctx.message.message_id,
+    });
   }
 });
 
-
-
-
-
-
-
 bot.launch();
-

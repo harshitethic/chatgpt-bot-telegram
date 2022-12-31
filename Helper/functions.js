@@ -26,7 +26,7 @@ const getChat = async (text) => {
       model: "text-davinci-003",
       prompt: text,
       temperature: 0,
-      max_tokens: 1000,
+      max_tokens: 500,
     });
 
     return response.data.choices[0].text;
