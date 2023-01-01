@@ -6,6 +6,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+// Generate image from prompt
 const getImage = async (text) => {
   try {
     const response = await openai.createImage({
@@ -19,7 +20,7 @@ const getImage = async (text) => {
     console.log(error);
   }
 };
-
+// Generate answer from prompt
 const getChat = async (text) => {
   try {
     const response = await openai.createCompletion({
@@ -35,6 +36,7 @@ const getChat = async (text) => {
   }
 };
 
+// Convert to standard english
 const correctEngish = async (text) => {
   try {
     const response = await openai.createCompletion({
