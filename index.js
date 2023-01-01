@@ -27,7 +27,7 @@ bot.start((ctx) => {
 
 bot.help((ctx) => {
   ctx.reply(
-    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me \n /en -> To fix grammar in your sentence "
+    "This bot can perform following commands \n /image -> to create image from text \n /ask -> ank anything from me \n /en -> To fix grammar in your sentence "
   );
 });
 
