@@ -1,4 +1,5 @@
 const { Configuration, OpenAIApi } = require("openai");
+const logger = require("./logger");
 
 const configuration = new Configuration({
   apiKey: process.env.API,
@@ -17,7 +18,7 @@ const getImage = async (text) => {
 
     return response.data.data[0].url;
   } catch (error) {
-    console.log(error);
+    logger.error("Error while generating image");
   }
 };
 // Generate answer from prompt
@@ -33,6 +34,7 @@ const getChat = async (text) => {
     return response.data.choices[0].text;
   } catch (error) {
     console.log(error);
+    logger.error("Error while generating Answer");
   }
 };
 
@@ -44,12 +46,11 @@ const correctEngish = async (text) => {
       prompt: `Correct this to standard English: /n${text}`,
       temperature: 0,
       max_tokens: 1000,
-     
     });
 
     return response.data.choices[0].text;
   } catch (error) {
-    console.log(error);
+    logger.error("Error while generating English ");
   }
 };
 
