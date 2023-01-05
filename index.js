@@ -22,16 +22,21 @@ const bot = new Telegraf(process.env.TG_API);
 
 // Bot on start
 bot.start((ctx) => {
-  logger.info("Bot started");
+  if (ctx.chat.type === "group") {
+    logger.info(`Bot started In: ${ctx.chat.title} `);
+  } else if (ctx.chat.type === "private") {
+    logger.info(`Bot started By ${ctx.chat.username || ctx.chat.first_name} `);
+  }
+  console.log(ctx.chat);
 
   ctx.reply(
-    "Welcome , You can ask anything from me\n\nThis bot can perform the following command \n /image -> to create image from text \n /ask -> ask anything from me \n /en -> to correct your grammer "
+    "Welcome To AI Bot 🧿 \n\nCommands 👾 \n/ask  ask anything from me \n/image to create image from text  \n/en to correct your grammer \n\n\nContract @Chetan_Baliyan if you want to report any BUG or change in features"
   );
 });
 
 bot.help((ctx) => {
   ctx.reply(
-    "This bot can perform following commands \n /image -> to create image from text \n /ask -> ask anything from me \n /en -> To fix grammar in your sentence "
+    "\nCommands 👾 \n\n/ask  ask anything from me \n/image to create image from text  \n/en to correct your grammer \n\n\nContract @Chetan_Baliyan if you want to report any BUG or change in features "
   );
 });
 
@@ -72,7 +77,7 @@ bot.command("image", async (ctx) => {
 
 bot.command("ask", async (ctx) => {
   const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
-  
+
   logger.info(`Chat: ${ctx.from.username || ctx.from.first_name}: ${text}`);
 
   if (text) {
@@ -98,7 +103,6 @@ bot.command("ask", async (ctx) => {
 bot.command("en", async (ctx) => {
   const text = ctx.message.text?.replace("/en", "")?.trim().toLowerCase();
 
-
   if (text) {
     ctx.sendChatAction("typing");
     const res = await correctEngish(text);
@@ -123,7 +127,6 @@ bot.command("yo", async (ctx) => {
   logger.info(`Joke: ${ctx.from.username || ctx.from.first_name}: ${text}`);
 
   const ress = await axios.get("https://api.yomomma.info/");
- 
 
   ctx.sendChatAction("typing");
 
