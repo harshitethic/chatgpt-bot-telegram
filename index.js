@@ -27,7 +27,7 @@ bot.start((ctx) => {
   } else if (ctx.chat.type === "private") {
     logger.info(`Bot started By ${ctx.chat.username || ctx.chat.first_name} `);
   }
-  console.log(ctx.chat);
+
 
   ctx.reply(
     "Welcome To AI Bot 🧿 \n\nCommands 👾 \n/ask  ask anything from me \n/image to create image from text  \n/en to correct your grammer \n\n\nContract @Chetan_Baliyan if you want to report any BUG or change in features"
