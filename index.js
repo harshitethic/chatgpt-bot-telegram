@@ -6,10 +6,14 @@ const {
 
   correctEngish,
 } = require("./Helper/functions");
+const User = require("./Model/user");
 
 const { Telegraf } = require("telegraf");
 const { default: axios } = require("axios");
 const logger = require("./Helper/logger");
+const connectDB = require("./Helper/db");
+const Group = require("./Model/groups");
+const checkAndSave = require("./Helper/saveToDb");
 
 const configuration = new Configuration({
   apiKey: process.env.API,
@@ -20,14 +24,16 @@ module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
 
+connectDB();
+
 // Bot on start
-bot.start((ctx) => {
+bot.start(async(ctx) => {
   if (ctx.chat.type === "group") {
     logger.info(`Bot started In: ${ctx.chat.title} `);
   } else if (ctx.chat.type === "private") {
     logger.info(`Bot started By ${ctx.chat.username || ctx.chat.first_name} `);
   }
-
+  await checkAndSave(ctx)
 
   ctx.reply(
     "Welcome To AI Bot 🧿 \n\nCommands 👾 \n/ask  ask anything from me \n/image to create image from text  \n/en to correct your grammer \n\n\nContract @Chetan_Baliyan if you want to report any BUG or change in features"
@@ -71,6 +77,7 @@ bot.command("image", async (ctx) => {
       }
     );
   }
+  await checkAndSave(ctx);
 });
 
 //Bot on ask command
@@ -97,6 +104,8 @@ bot.command("ask", async (ctx) => {
       }
     );
   }
+
+  await checkAndSave(ctx);
 });
 
 // Bot on en command
