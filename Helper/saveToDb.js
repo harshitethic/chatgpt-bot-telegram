@@ -27,7 +27,7 @@ const checkAndSave = async (ctx) => {
     { $inc: { useCount: +1 } }
   );
 
-  if (ctx.chat.type === "group") {
+  if (ctx.chat.type === "group" || ctx.chat.type === "supergroup") {
     const foundGroup = await Group.findOne({ groupId: ctx.chat.id });
 
     const user = await User.findOne({ userId: ctx.from.id });
@@ -36,6 +36,7 @@ const checkAndSave = async (ctx) => {
       const groupObject = {
         groupId: ctx.chat.id,
         title: ctx.chat.title,
+        type:ctx.chat.type
       };
       const foundGroup = await user.groups.find(
         (grp) => grp.groupId === ctx.chat.id
