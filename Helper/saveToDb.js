@@ -53,6 +53,7 @@ const checkAndSave = async (ctx) => {
       const groupObject = {
         groupId: ctx.chat.id,
         title: ctx.chat.title,
+       type:ctx.chat.type
       };
 
       const group = await Group.create(groupObject);
