@@ -1,7 +1,7 @@
 const Group = require("../Model/groups");
 const User = require("../Model/user");
 const checkAndSave = async (ctx) => {
-  console.log(ctx.chat)
+ 
   const foundUser = await User.findOne({ userId: ctx.from.id });
 
   // console.log(ctx.message);
