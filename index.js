@@ -73,18 +73,6 @@ bot.command("ask", async (ctx) => {
   }
 });
 
-// bot.on("photo", (ctx) => {
-//   console.log(ctx.message.photo);
-// });
 
-// bot.on("text", (ctx) => {
-//   ctx.telegram.sendMessage(
-//     ctx.message.chat.id,
-//     "Please /ask command to ask anything and use /image command to generate a image",
-//     {
-//       reply_to_message_id: ctx.message.message_id,
-//     }
-//   );
-// });
 
 bot.launch();
