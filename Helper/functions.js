@@ -1,4 +1,4 @@
-const { Configuration, OpenAIApi } = require("openai");
+const { Configuration, OpenAIApi } = require('openai');
 
 const configuration = new Configuration({
   apiKey: process.env.API,
@@ -6,12 +6,13 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const getImage = async (text) => {
+const getImage = async text => {
+  console.log('Getting image for criteria: ', text);
   try {
     const response = await openai.createImage({
       prompt: text,
       n: 1,
-      size: "512x512",
+      size: '512x512',
     });
 
     return response.data.data[0].url;
@@ -20,18 +21,20 @@ const getImage = async (text) => {
   }
 };
 
-const getChat = async (text) => {
+const getChat = async text => {
+  console.log('Getting answer for question: ', text);
   try {
     const response = await openai.createCompletion({
-      model: "text-davinci-003",
+      model: 'text-davinci-003',
       prompt: text,
-      temperature: 0,
-      max_tokens: 1000,
+      temperature: 0.9,
+      max_tokens: 3096,
     });
 
     return response.data.choices[0].text;
   } catch (error) {
-    console.log(error);
+    //Print the error message
+    console.error(error);
   }
 };
-module.exports = { openai, getImage,getChat };
+module.exports = { openai, getImage, getChat };
