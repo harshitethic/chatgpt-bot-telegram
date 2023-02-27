@@ -22,13 +22,12 @@ const getImage = async text => {
 };
 
 const getChat = async text => {
-  console.log('Getting answer for question: ', text);
   try {
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
       prompt: text,
-      temperature: 0.9,
-      max_tokens: 3096,
+      temperature: 0.8,
+      max_tokens: 3800,
     });
 
     return response.data.choices[0].text;
