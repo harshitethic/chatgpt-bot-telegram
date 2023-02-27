@@ -12,8 +12,8 @@ module.exports = openai;
 
 const bot = new Telegraf(process.env.TG_API);
 const notAllowed = '🚫 No estás autorizado a usar este bot.';
-const functionNotAvailable = '😕 Esta función está deshabilitada por el momento';
-bot.start(ctx => ctx.reply('Bienvenido, me puedes preguntar lo que quieras, pero no seas demasiado ambiguo ni genérico. Envía /ask y luego tu pregunta.'));
+const functionNotAvailable = '😕 Esta función está deshabilitada por el momento, pero pronto...😉';
+bot.start(ctx => ctx.reply('🤩 Bienvenido, soy el bot de ChatGPT para Telegram 💪; me puedes preguntar lo que quieras, pero no seas demasiado ambiguo ni genérico. Tampoco hagas preguntas muy largas. No recuerdo la conversación; solo respondo una pregunta a la vez así que no trates de "conversar" conmigo, porque no lo haré 😒. Envía /ask y luego tu pregunta.'));
 
 bot.help(ctx => {
   ctx.reply('This bot can perform the following command \n /image -> to create image from text 🖼 \n /ask -> ask anything from me 🤓');
