@@ -1,78 +1,38 @@
-require('dotenv').config()
-const { Configuration, OpenAIApi } = require("openai");
-const { getImage, getChat } = require("./Helper/functions");
-const { Telegraf } = require("telegraf");
+'use strict';
 
-const configuration = new Configuration({
-  apiKey: process.env.API,
-});
-const openai = new OpenAIApi(configuration);
-module.exports = openai;
+require('dotenv').config();
+const OpenAI = require('openai');
+const { createAiService } = require('./src/ai');
+const { createBot } = require('./src/bot');
 
-const bot = new Telegraf(process.env.TG_API);
-bot.start((ctx) => ctx.reply("Welcome , You can ask anything from me"));
-
-bot.help((ctx) => {
-  ctx.reply(
-    "This bot can perform the following command \n /image -> to create image from text \n /ask -> ank anything from me "
-  );
-});
-
-
-
-// Image command
-bot.command("image", async (ctx) => {
-  const text = ctx.message.text?.replace("/image", "")?.trim().toLowerCase();
-
-  if (text) {
-   
-    const res = await getImage(text);
-
-    if (res) {
-      ctx.sendChatAction("upload_photo");
-      // ctx.sendPhoto(res);
-      // ctx.telegram.sendPhoto()
-      ctx.telegram.sendPhoto(ctx.message.chat.id, res, {
-        reply_to_message_id: ctx.message.message_id,
-      });
-    }
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "You have to give some description after /image",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
+function start(env = process.env) {
+  if (!env.OPENAI_API_KEY || !env.TELEGRAM_BOT_TOKEN) {
+    throw new Error(
+      'Missing OPENAI_API_KEY or TELEGRAM_BOT_TOKEN. Copy .env.example to .env and set both.'
     );
   }
-});
 
-// Chat command
+  const client = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+  const ai = createAiService(client, {
+    textModel: env.OPENAI_TEXT_MODEL,
+    imageModel: env.OPENAI_IMAGE_MODEL,
+  });
+  const bot = createBot(env.TELEGRAM_BOT_TOKEN, ai);
+  bot.launch().catch((err) => {
+    console.error('Unable to start Telegram bot:', err?.code || err?.message || 'unknown');
+    process.exitCode = 1;
+  });
 
-bot.command("ask", async (ctx) => {
-  const text = ctx.message.text?.replace("/ask", "")?.trim().toLowerCase();
+  process.once('SIGINT', () => bot.stop('SIGINT'));
+  process.once('SIGTERM', () => bot.stop('SIGTERM'));
+  return bot;
+}
 
-  if (text) {
-    ctx.sendChatAction("typing");
-    const res = await getChat(text);
-    if (res) {
-      ctx.telegram.sendMessage(ctx.message.chat.id, res, {
-        reply_to_message_id: ctx.message.message_id,
-      });
-    }
-  } else {
-    ctx.telegram.sendMessage(
-      ctx.message.chat.id,
-      "Please ask anything after /ask",
-      {
-        reply_to_message_id: ctx.message.message_id,
-      }
-    );
-  
-    //  reply("Please ask anything after /ask");
+if (require.main === module) {
+  try { start(); }
+  catch (err) {
+    console.error(err.message);
+    process.exitCode = 1;
   }
-});
-
-
-
-bot.launch();
+}
+module.exports = { start };
