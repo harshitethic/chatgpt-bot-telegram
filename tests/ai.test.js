@@ -60,3 +60,15 @@ test('service and bot reject missing dependencies', () => {
   assert.equal(errorMessage(new RangeError('too long')).includes('4,000'), true);
   assert.equal(errorMessage(new Error('secret-token')).includes('secret-token'), false);
 });
+
+test('invalid or oversized image data is refused without uncontrolled base64 decoding', async () => {
+  let raw = '@@invalid@@';
+  const client = {
+    responses: { create: async () => ({ output_text: 'ok' }) },
+    images: { generate: async () => ({ data: [{ b64_json: raw }] }) },
+  };
+  const ai = createAiService(client);
+  await assert.rejects(() => ai.image('example'), /invalid/i);
+  raw = 'A'.repeat(4 * Math.ceil(10 * 1024 * 1024 / 3) + 8);
+  await assert.rejects(() => ai.image('example'), /large/i);
+});

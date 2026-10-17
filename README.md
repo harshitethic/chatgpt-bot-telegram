@@ -39,6 +39,36 @@ Do **not** commit your `.env`, post keys in issues, or put API keys into JavaScr
 
 The bot uses long polling. Each deployed instance should be the **only** active long-polling process using that Telegram token.
 
+### Default paid-request admission limits
+
+To reduce accidental API bills and request storms, the bot enforces the
+following **process-local** budgets:
+
+| Setting | Default | Meaning |
+| --- | ---: | --- |
+| BOT_MAX_TEXT_PER_HOUR | 5 | Accepted /ask requests per Telegram user per rolling hour |
+| BOT_MAX_IMAGES_PER_HOUR | 1 | Accepted /image requests per Telegram user per rolling hour |
+| BOT_MAX_CONCURRENT | 3 | AI/Telegram reply operations admitted at once globally |
+| BOT_MAX_TRACKED_USERS | 4096 | Maximum retained user counters before expired idle entries are purged |
+
+One AI request per user can execute at a time, across both commands. Requests
+over budget receive a clear reply **without invoking OpenAI**. Missing user
+IDs fail closed. Invalid, zero or excessive configuration values prevent bot
+startup instead of disabling limits. The hour budget is counted on admission,
+**including upstream failures**; retrying a failed operation cannot bypass
+usage accounting.
+
+Image responses are also validated and capped at **10 MiB decoded** before
+sending to Telegram. The provider SDK can still buffer network responses
+before that validation; this is not a transfer-byte cap.
+
+These are not currency quotas or absolute financial guarantees. The limits
+reset when the process restarts; multiple independently launched bot
+instances **do not share counters**. Each accepted request may still incur
+provider costs. Telegram users can create multiple accounts, and the global
+guard cannot prevent distributed abuse. Public services also require durable
+cross-process accounting, operator alerts, billing controls and moderation.
+
 ## How it works
 
 ```text
@@ -58,7 +88,7 @@ Telegraf command handler (/ask or /image)
 
 The API client lives in `src/ai.js`, Telegram handling in `src/bot.js`, and parsing in `src/commands.js`. Missing keys fail at startup. Commands catch upstream errors and show a user-safe message rather than leaking raw API responses. Telegram text is capped to its 4,096-character message limit.
 
-**Limits:** This sample does not implement per-user rate limiting, persistence, queues, content moderation, or deployment monitoring. Add those before public deployment. Image generation requires a model enabled for your API account.
+**Limits:** This sample has process-local per-user rate limits and concurrent-request admission, but **not** persistent quotas, a distributed queue, content moderation, billing controls, or deployment monitoring. Add those before public deployment. Image generation requires a model enabled for your API account.
 
 ## Development and checks
 
@@ -68,7 +98,11 @@ npm run check
 npm test
 ```
 
-Node's built-in test runner validates prompt parsing, input bounds, Responses API payloads, image decoding, error paths, and configuration guards **without network calls or secrets**. [GitHub Actions](https://github.com/harshitethic/chatgpt-bot-telegram/actions) runs these checks on pull requests.
+Node's built-in test runner validates prompt parsing, input bounds, API payloads, image decoding, usage admission, error paths, and the real Telegraf update-handler flow **without network calls or secrets**. [GitHub Actions](https://github.com/harshitethic/chatgpt-bot-telegram/actions) runs these checks on pull requests. CI also checks for high-severity npm production-dependency advisories and runs JavaScript CodeQL security-extended analysis. Passing CI does not guarantee the absence of security issues.
+
+## License
+
+[ISC](LICENSE), matching the license declaration in package.json.
 
 ## Migration from the 2023 example
 

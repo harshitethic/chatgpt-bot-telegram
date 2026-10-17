@@ -4,6 +4,7 @@ require('dotenv').config();
 const OpenAI = require('openai');
 const { createAiService } = require('./src/ai');
 const { createBot } = require('./src/bot');
+const { limitsFromEnv } = require('./src/admission');
 
 function start(env = process.env) {
   if (!env.OPENAI_API_KEY || !env.TELEGRAM_BOT_TOKEN) {
@@ -12,12 +13,13 @@ function start(env = process.env) {
     );
   }
 
+  const limits = limitsFromEnv(env);
   const client = new OpenAI({ apiKey: env.OPENAI_API_KEY });
   const ai = createAiService(client, {
     textModel: env.OPENAI_TEXT_MODEL,
     imageModel: env.OPENAI_IMAGE_MODEL,
   });
-  const bot = createBot(env.TELEGRAM_BOT_TOKEN, ai);
+  const bot = createBot(env.TELEGRAM_BOT_TOKEN, ai, { limits });
   bot.launch().catch((err) => {
     console.error('Unable to start Telegram bot:', err?.code || err?.message || 'unknown');
     process.exitCode = 1;

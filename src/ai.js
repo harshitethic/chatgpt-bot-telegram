@@ -46,7 +46,18 @@ function createAiService(client, options = {}) {
       if (!base64 || typeof base64 !== 'string') {
         throw new Error('The image API returned no image data');
       }
-      return Buffer.from(base64, 'base64');
+      // A provider response is untrusted input. Avoid decoding huge or
+      // malformed base64 blobs into another large in-memory allocation.
+      const maxImageBytes = 10 * 1024 * 1024;
+      if (base64.length > 4 * Math.ceil(maxImageBytes / 3) ||
+          !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(base64)) {
+        throw new RangeError('Image data is too large or invalid');
+      }
+      const decoded = Buffer.from(base64, 'base64');
+      if (!decoded.length || decoded.length > maxImageBytes) {
+        throw new RangeError('Image data is too large or invalid');
+      }
+      return decoded;
     },
   };
 }

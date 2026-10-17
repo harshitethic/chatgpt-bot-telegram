@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "node --test",
-    "check": "node --check index.js && node --check src/ai.js && node --check src/bot.js && node --check src/commands.js"
+    "check": "node --check index.js && node --check src/ai.js && node --check src/bot.js && node --check src/commands.js && node --check src/admission.js"
   },
   "license": "ISC",
   "dependencies": {
