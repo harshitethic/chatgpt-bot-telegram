@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-bot-telegram",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Tested Telegram bot using OpenAI's Responses and image APIs",
   "private": false,
   "type": "commonjs",

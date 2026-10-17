@@ -9,6 +9,8 @@ A small, open-source **Node.js Telegram bot** with two commands:
 
 > **Version 2 upgrade:** The original 2023 example used the retired OpenAI Node SDK v3 and legacy completion/image endpoints. This update uses a supported SDK shape, safer configuration and regression tests. Existing deployments must update their environment variables and dependencies. This is a sample bot, not a production multi-tenant service.
 
+[Release history and upgrade notes](CHANGELOG.md) · [Latest release](https://github.com/harshitethic/chatgpt-bot-telegram/releases/latest)
+
 ## Requirements
 
 - Node.js 20 or later
