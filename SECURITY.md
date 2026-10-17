@@ -13,6 +13,19 @@ On 14 October 2026, unmerged public PRs proposing API and Telegram bot credentia
 
 Please do not post real tokens, personal information, private conversations or exploit payloads containing live credentials in public issues or PR comments. Report reproducible security concerns to `contact@harshitethic.com` with a minimal **redacted** reproduction and affected version.
 
+## AI-spend admission
+
+The bot now rejects excess paid requests **before** calling the provider:
+five accepted text and one image request per user per hour by default,
+one in-flight request per user, and three concurrent operations per process.
+Missing identity and invalid configuration fail closed. No more than 4,096
+user-budget entries are tracked by default, with expired idle entries purged.
+
+**Not a guaranteed financial cap:** budgets are memory-only and reset on
+restart. Separate processes do not coordinate. Users can create additional
+Telegram accounts. An allowed request still uses paid OpenAI APIs; apply
+actual billing limits and operational monitoring.
+
 ## Public deployment limits
 
-This is a sample bot, not an audited multi-tenant service. Production deployments need explicit per-user quotas, abuse controls, safe logging, monitoring, rate limiting, consent and key management. GitHub Actions passing tests does not establish that a production bot is secure.
+This is a sample bot, not an audited multi-tenant service. Production deployments need **durable cross-process** quotas, abuse controls, safe logging, monitoring, consent and key management. GitHub Actions passing tests does not establish that a production bot is secure.
