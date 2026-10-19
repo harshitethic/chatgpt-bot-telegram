@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.6.1",
-    "openai": "^7.32.0",
+    "openai": "^7.34.0",
     "telegraf": "^4.16.3"
   }
 }
