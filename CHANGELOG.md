@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Split long AI text into a maximum of four sequential, bounded Telegram messages instead of silently cutting it off at 4,096 characters.
+- Preserve Unicode surrogate pairs and mark intentionally shortened responses.
+- Add splitter and live Telegraf handler regression tests.
+
 ## 2.1.0 — 17 October 2026
 
 **Paid-request guardrails for the local Telegram bot sample.**

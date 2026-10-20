@@ -114,3 +114,7 @@ Node's built-in test runner validates prompt parsing, input bounds, API payloads
 4. Ensure your OpenAI account permits the configured text and image models.
 
 This sample is community-maintained; please report reproducible issues with version numbers and **redacted** logs.
+
+### Long AI answers
+
+Answers longer than 4,096 UTF-16 code units are delivered as multiple sequential Telegram messages instead of being silently cut off. A single request produces at most four messages; if longer, the final message clearly notes the truncation. Messages stay within Telegram's per-message limit and surrogate pairs are preserved.

@@ -99,3 +99,18 @@ test('global concurrency saturation rejects another user and releases after fail
   await bot.handleUpdate(update(3, 2, '/image test'));
   assert.ok(messages.some((x) => x.method === 'sendPhoto'));
 });
+
+test('long answer is delivered in multiple messages', async (t) => {
+  const response = 'x'.repeat(4095) + '😊' + 'y'.repeat(5500);
+  let calls = 0;
+  const { bot, messages } = fixture(t, {
+    answer: async () => { calls++; return response; },
+    image: async () => Buffer.from('image'),
+  }, { textPerHour: 1, imagesPerHour: 1, globalConcurrent: 1 });
+  await bot.handleUpdate(update(90, 1001, '/ask explain thoroughly'));
+  const sent = messages.filter((message) => message.method === 'sendMessage');
+  assert.equal(calls, 1);
+  assert.equal(sent.length, 3);
+  assert.ok(sent.every((message) => message.payload.text.length <= 4096));
+  assert.equal(sent.map((message) => message.payload.text).join(''), response);
+});
