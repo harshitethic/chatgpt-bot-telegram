@@ -3,6 +3,7 @@
 const { Telegraf } = require('telegraf');
 const { commandPayload, errorMessage } = require('./commands');
 const { assertPrompt } = require('./ai');
+const { splitTelegramReply } = require('./replies');
 const { createRequestLimiter } = require('./admission');
 
 function createBot(token, ai, options = {}) {
@@ -38,7 +39,11 @@ function createBot(token, ai, options = {}) {
       await ctx.sendChatAction(kind === 'text' ? 'typing' : 'upload_photo');
       if (kind === 'text') {
         const reply = await ai.answer(prompt);
-        return await ctx.reply(reply.slice(0, 4096));
+        let sent;
+        for (const part of splitTelegramReply(reply)) {
+          sent = await ctx.reply(part);
+        }
+        return sent;
       }
       const image = await ai.image(prompt);
       return await ctx.replyWithPhoto({ source: image, filename: 'generated.png' });
